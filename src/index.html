@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon QuickSight</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Visualization & Content Choices: 
+        - Text from slides: Converted to HTML. Goal: Inform. Method: Structured text. Justification: Clarity.
+        - SPICE vs. Direct Query: Conceptual Bar Chart. Goal: Compare. Method: Chart.js. Interaction: Tooltips. Justification: Visual performance difference.
+        - Data Prep (Datasets): HTML/Tailwind diagram. Goal: Organize. Method: Divs/Borders. Interaction: Hover hints. Justification: Clarify dataset role.
+        - ML Insights: Text + Icons. Goal: Inform. Method: Unicode icons, text revealed on interaction. Interaction: Click/Hover. Justification: Tangible examples.
+        - Security (RLS/CLS): HTML/Tailwind table mockup. Goal: Illustrate. Method: Tabbed tables. Interaction: Click to switch views. Justification: Demonstrate security concepts.
+        - AWS Ecosystem: HTML/Tailwind diagram. Goal: Show Relationships. Method: Divs/Borders. Interaction: Hover hints. Justification: Visualize interconnectedness.
+        - All interactions aim to enhance understanding beyond static text.
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+        .nav-link.active, .nav-link:hover {
+            background-color: #f59e0b; /* amber-500 */
+            color: #1e293b; /* slate-800 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px; /* max-w-lg */
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px; /* h-80 */
+            max-height: 400px;
+            padding: 1rem; /* p-4 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* shadow */
+            background-color: #ffffff;
+        }
+        @media (min-width: 768px) { /* md */
+            .chart-container {
+                height: 320px; /* h-80 */
+            }
+        }
+         /* Custom styles for interactive elements */
+        .interactive-icon-container span { cursor: pointer; margin-right: 10px; }
+        .interactive-icon-container .details { display: none; margin-top: 5px; padding: 8px; background-color: #e0f2fe; border-radius: 4px; }
+
+        .diagram-box {
+            border: 2px solid #0ea5e9; /* sky-500 */
+            padding: 0.75rem; /* p-3 */
+            border-radius: 0.375rem; /* rounded-md */
+            text-align: center;
+            background-color: #f0f9ff; /* sky-50 */
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .diagram-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem; /* text-2xl */
+            color: #3b82f6; /* blue-500 */
+            margin: 0 0.5rem; /* mx-2 */
+        }
+        .tab-button {
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            background-color: #e2e8f0; /* slate-200 */
+            color: #334155; /* slate-700 */
+            transition: background-color 0.3s;
+        }
+        .tab-button.active {
+            background-color: #0ea5e9; /* sky-500 */
+            color: white;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-100 text-slate-800">
+
+    <div class="flex min-h-screen">
+        <aside class="w-1/4 bg-slate-800 text-slate-100 p-6 space-y-3 shadow-xl fixed top-0 left-0 h-full overflow-y-auto">
+            <h1 class="text-2xl font-bold text-amber-400 mb-6">QuickSight</h1>
+            <nav>
+                <a href="#introducao" class="nav-link block py-2.5 px-4 rounded-md font-semibold">Introdução</a>
+                <a href="#conectividade" class="nav-link block py-2.5 px-4 rounded-md font-semibold">Conectividade</a>
+                <a href="#preparacao" class="nav-link block py-2.5 px-4 rounded-md font-semibold">Preparação de Dados</a>
+                <a href="#dashboards" class="nav-link block py-2.5 px-4 rounded-md font-semibold">Dashboards e Análises</a>
+                <a href="#recursos_avancados" class="nav-link block py-2.5 px-4 rounded-md font-semibold">Recursos Avançados</a>
+                <a href="#seguranca" class="nav-link block py-2.5 px-4 rounded-md font-semibold">Segurança e Governança</a>
+                <a href="#ecossistema" class="nav-link block py-2.5 px-4 rounded-md font-semibold">Ecossistema AWS</a>
+                <a href="#casos_uso" class="nav-link block py-2.5 px-4 rounded-md font-semibold">Casos de Uso</a>
+                <a href="#proximos_passos" class="nav-link block py-2.5 px-4 rounded-md font-semibold">Próximos Passos</a>
+            </nav>
+        </aside>
+
+        <main class="w-3/4 ml-[25%] p-8">
+            <header class="mb-8">
+                <h2 id="main-title" class="text-4xl font-bold text-sky-700">Bem-vindo a apresentação do Amazon QuickSight!</h2>
+                <p class="text-slate-600 mt-2">Explore as funcionalidades chave do QuickSight. Use a navegação à esquerda para pular entre as seções.</p>
+            </header>
+
+            <section id="introducao" class="content-section space-y-6 bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-3xl font-semibold text-sky-600 border-b-2 border-sky-200 pb-3 mb-4">O que é o Amazon QuickSight?</h3>
+                <p class="text-lg">Esta seção introduz o Amazon QuickSight, um serviço de Business Intelligence (BI) poderoso e escalável na nuvem AWS. Descubra como ele pode ajudar seu time de dados a visualizar informações e capacitar usuários de negócio.</p>
+                
+                <div>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">Serviço de BI em Nuvem Serverless e Escalonável:</h4>
+                    <ul class="list-disc list-inside space-y-1 pl-4 text-slate-600">
+                        <li>Dispensa gerenciamento de infraestrutura (servidores, software).</li>
+                        <li>Escala automaticamente para atender à demanda, de poucos a milhares de usuários.</li>
+                        <li>Modelo de precificação "pay-per-session" (leitores) ou "pay-per-user" (autores).</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">Interface Intuitiva para Usuários de Negócio:</h4>
+                    <ul class="list-disc list-inside space-y-1 pl-4 text-slate-600">
+                        <li>Permite a criação fácil de dashboards interativos e relatórios.</li>
+                        <li>Foco em "self-service BI", capacitando usuários a explorar dados.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">Relevância para o Time de Dados:</h4>
+                    <ul class="list-disc list-inside space-y-1 pl-4 text-slate-600">
+                        <li><strong>Orquestração e preparação de dados:</strong> Ferramentas para modelar e refinar dados.</li>
+                        <li><strong>Capacitar usuários de negócio:</strong> Reduz a carga de trabalho do time de dados em solicitações ad-hoc.</li>
+                        <li><strong>Governança e segurança:</strong> Centraliza o controle de acesso e a privacidade dos dados.</li>
+                        <li><strong>Integração nativa com AWS:</strong> Facilita a construção de arquiteturas de dados completas.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="conectividade" class="content-section space-y-6 bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-3xl font-semibold text-sky-600 border-b-2 border-sky-200 pb-3 mb-4">Conectividade com Dados</h3>
+                <p class="text-lg">O QuickSight oferece uma vasta gama de conectores para diversas fontes de dados, desde serviços AWS até bancos de dados on-premises e SaaS. Um componente chave é o SPICE, seu motor de cálculo em memória. Explore abaixo.</p>
+
+                <div>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">Ampla Gama de Conectores Nativos:</h4>
+                    <p class="text-slate-600 mb-1"><strong>Serviços AWS:</strong> S3, Redshift, Athena, RDS (Aurora, MySQL, PostgreSQL, SQL Server, Oracle), DynamoDB, SageMaker, Kinesis.</p>
+                    <p class="text-slate-600 mb-1"><strong>Bancos de Dados Locais/Outras Nuvens:</strong> SQL Server, PostgreSQL, MySQL, Oracle, Teradata, Snowflake, Databricks.</p>
+                    <p class="text-slate-600 mb-1"><strong>SaaS:</strong> Salesforce, Adobe Analytics, Jira, ServiceNow, Google Analytics, Twitter.</p>
+                    <p class="text-slate-600"><strong>APIs:</strong> Conectores personalizados via SDK.</p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">SPICE (Super-fast Parallel In-memory Calculation Engine):</h4>
+                    <p class="text-slate-600 mb-2">Motor de computação em memória de alta performance do QuickSight. Importa dados para memória otimizada para consultas rápidas.</p>
+                    <ul class="list-disc list-inside space-y-1 pl-4 text-slate-600 mb-3">
+                        <li><strong>Consultas ultrarrápidas:</strong> Desempenho superior, mesmo em grandes volumes.</li>
+                        <li><strong>Redução da carga:</strong> Minimiza o impacto sobre as fontes de dados primárias.</li>
+                        <li><strong>Gerenciamento automático:</strong> QuickSight gerencia recursos e memória do SPICE.</li>
+                        <li><strong>Flexibilidade:</strong> Escolha entre "Direct Query" (consultas em tempo real) e "SPICE".</li>
+                    </ul>
+                    <div class="chart-container">
+                        <canvas id="spiceChart"></canvas>
+                    </div>
+                    <p class="text-sm text-center mt-2 text-slate-500">Gráfico conceitual ilustrando a diferença de performance.</p>
+                </div>
+            </section>
+
+            <section id="preparacao" class="content-section space-y-6 bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-3xl font-semibold text-sky-600 border-b-2 border-sky-200 pb-3 mb-4">Preparação e Modelagem de Dados</h3>
+                <p class="text-lg">Antes da visualização, os dados frequentemente precisam ser preparados e modelados. O QuickSight fornece ferramentas visuais para isso, além do conceito de "Conjuntos de Dados" (Datasets) para padronização e reutilização.</p>
+                <div>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">Data Prep Visual:</h4>
+                    <ul class="list-disc list-inside space-y-1 pl-4 text-slate-600">
+                        <li>Interface intuitiva para transformações: limpeza, filtros, renomear colunas, alterar tipos de dados, joins, unions.</li>
+                        <li>Criação de campos calculados.</li>
+                        <li><strong>Para o time de dados:</strong> Agiliza validações e ajustes rápidos, permite que analistas realizem preparações simples.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">Conjuntos de Dados (Datasets):</h4>
+                    <p class="text-slate-600 mb-2">Abstração das fontes de dados, criando uma "visão" padronizada. Essencial para:</p>
+                    <ul class="list-disc list-inside space-y-1 pl-4 text-slate-600">
+                        <li><strong>Padronização e Reutilização:</strong> Datasets mestres para múltiplos dashboards.</li>
+                        <li><strong>Consistência e Qualidade:</strong> Garante que todos usem a mesma versão dos dados.</li>
+                        <li><strong>Controle de Acesso e Segurança:</strong> Permissões no nível do dataset.</li>
+                        <li><strong>Versionamento:</strong> Gerenciamento de versões para testes e produção.</li>
+                    </ul>
+                    <div class="mt-4 p-4 border border-dashed border-sky-300 rounded-md bg-sky-50">
+                        <h5 class="text-lg font-semibold text-sky-700 mb-2">Diagrama Conceitual: Papel dos Datasets</h5>
+                        <div class="flex flex-col md:flex-row items-center justify-around space-y-4 md:space-y-0 md:space-x-2">
+                            <div class="diagram-box">Fonte de Dados A<br>(ex: S3)</div>
+                            <div class="diagram-arrow text-3xl">➡️</div>
+                            <div class="diagram-box bg-amber-100 border-amber-500">Dataset "Vendas Q1"<br>(Modelo, Segurança)</div>
+                            <div class="diagram-arrow text-3xl">➡️</div>
+                            <div class="diagram-box">Dashboard de Vendas</div>
+                        </div>
+                        <div class="flex flex-col md:flex-row items-center justify-around space-y-4 md:space-y-0 md:space-x-2 mt-4">
+                           <div class="diagram-box">Fonte de Dados B<br>(ex: Redshift)</div>
+                            <div class="diagram-arrow text-3xl">➡️</div>
+                            <div class="diagram-box bg-amber-100 border-amber-500">Dataset "Marketing Global"<br>(Modelo, Segurança)</div>
+                            <div class="diagram-arrow text-3xl">➡️</div>
+                            <div class="diagram-box">Análise de Campanhas</div>
+                        </div>
+                         <p class="text-sm text-center mt-3 text-slate-500">Datasets atuam como uma camada intermediária gerenciada.</p>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">Cálculos e Campos Calculados:</h4>
+                    <p class="text-slate-600">Crie novas métricas e dimensões diretamente no QuickSight usando funções. Empodera usuários de negócio e reduz a necessidade de pré-computar tudo no data warehouse.</p>
+                </div>
+            </section>
+
+            <section id="dashboards" class="content-section space-y-6 bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-3xl font-semibold text-sky-600 border-b-2 border-sky-200 pb-3 mb-4">Criação de Análises e Dashboards</h3>
+                 <p class="text-lg">O coração do QuickSight é sua capacidade de transformar dados em visualizações e dashboards interativos. Com uma interface amigável e diversos recursos, usuários podem facilmente explorar dados e compartilhar insights.</p>
+                <div>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">Interface de Arrastar e Soltar (Drag-and-Drop):</h4>
+                    <p class="text-slate-600">Facilidade para construir visualizações e layouts. Inclui <strong>AutoGraph</strong>, que sugere os melhores tipos de visualização.</p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">Diversidade de Visualizações:</h4>
+                    <p class="text-slate-600">Gráficos de barras, linhas, pizza, dispersão, mapas, tabelas dinâmicas, KPIs, funis, medidores, etc. Com opções de formatação e personalização.</p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">Análises Interativas:</h4>
+                    <ul class="list-disc list-inside space-y-1 pl-4 text-slate-600">
+                        <li><strong>Filtros:</strong> Globais ou específicos.</li>
+                        <li><strong>Parâmetros:</strong> Permitem que usuários insiram valores para personalizar análises.</li>
+                        <li><strong>Drill-downs:</strong> Aprofundamento nos dados.</li>
+                        <li><strong>Ações:</strong> Configurar interações entre visualizações.</li>
+                        <li><strong>Para o time de dados:</strong> Dashboards dinâmicos reduzem a necessidade de relatórios estáticos.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">Publicação e Compartilhamento:</h4>
+                    <p class="text-slate-600">Publique análises como dashboards. Controle de acesso granular. Compartilhamento via link, incorporação ou exportação (PDF/CSV).</p>
+                </div>
+            </section>
+
+            <section id="recursos_avancados" class="content-section space-y-6 bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-3xl font-semibold text-sky-600 border-b-2 border-sky-200 pb-3 mb-4">Recursos Avançados</h3>
+                <p class="text-lg">O QuickSight vai além de dashboards básicos, oferecendo funcionalidades de Machine Learning e capacidades de automação que são particularmente úteis para times de dados que buscam otimizar seus fluxos de trabalho e extrair insights mais profundos.</p>
+                <div>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">ML Insights (Machine Learning Insights):</h4>
+                    <p class="text-slate-600 mb-3">Incorpore capacidades analíticas avançadas sem codificação complexa. Clique nos ícones para saber mais:</p>
+                    <div class="interactive-icon-container space-y-2">
+                        <div>
+                            <span class="text-2xl" title="Detectar Anomalias">❗ Anomalias</span>
+                            <div class="details text-slate-600">Detecção automática de picos, vales e padrões incomuns nos dados, com explicação dos fatores contribuintes.</div>
+                        </div>
+                        <div>
+                            <span class="text-2xl" title="Fazer Previsões">📈 Previsões</span>
+                            <div class="details text-slate-600">Capacidade de projetar tendências futuras baseadas em séries temporais, com intervalos de confiança.</div>
+                        </div>
+                        <div>
+                           <span class="text-2xl" title="Gerar Narrativas">✍️ Narrativas Automatizadas</span>
+                            <div class="details text-slate-600">Gera descrições em linguagem natural dos principais insights e tendências nos dados. Ex: "A receita aumentou 15%..."</div>
+                        </div>
+                    </div>
+                     <p class="text-sm mt-3 text-slate-500">Estes recursos liberam cientistas de dados para problemas mais complexos.</p>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">Automação e APIs:</h4>
+                     <ul class="list-disc list-inside space-y-1 pl-4 text-slate-600">
+                        <li><strong>APIs do QuickSight (AWS SDKs):</strong> Automatize tarefas como criação/atualização de datasets, gerenciamento de usuários, publicação de dashboards. Integração com CI/CD.</li>
+                        <li><strong>Integração com AWS Lambda, Step Functions:</strong> Dispare atualizações de SPICE, automatize envio de relatórios.</li>
+                        <li><strong>Para o time de dados:</strong> Facilita a integração do QuickSight em pipelines de dados e automação de fluxos.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="seguranca" class="content-section space-y-6 bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-3xl font-semibold text-sky-600 border-b-2 border-sky-200 pb-3 mb-4">Segurança e Governança</h3>
+                <p class="text-lg">A segurança dos dados é primordial. O QuickSight integra-se profundamente com os mecanismos de segurança da AWS e oferece controles granulares para garantir que os dados certos sejam acessados pelas pessoas certas.</p>
+                <ul class="list-disc list-inside space-y-2 pl-4 text-slate-600">
+                    <li><strong>Integração com AWS IAM:</strong> Controle de acesso granular (usuário, grupo, recurso).</li>
+                    <li><strong>Single Sign-On (SSO):</strong> Integração com provedores de identidade (AWS SSO, AD, Okta).</li>
+                    <li><strong>Auditoria e Logs:</strong> Registro de atividades via AWS CloudTrail.</li>
+                    <li><strong>Criptografia:</strong> Dados em trânsito e em repouso são criptografados.</li>
+                </ul>
+                <div>
+                    <h4 class="text-xl font-semibold text-slate-700 my-3">Row-Level Security (RLS) e Column-Level Security (CLS):</h4>
+                    <p class="text-slate-600 mb-3">Essenciais para conformidade (LGPD, GDPR) e privacidade. Veja um exemplo:</p>
+                    <div class="tabs-container">
+                        <button class="tab-button active" data-tab="full">Visão Completa (Admin)</button>
+                        <button class="tab-button" data-tab="userA">Visão Usuário A (RLS)</button>
+                        <button class="tab-button" data-tab="userB">Visão Usuário B (RLS+CLS)</button>
+                    </div>
+                    <div id="full" class="tab-content active mt-3 p-3 border rounded-md bg-slate-50">
+                        <p class="font-semibold mb-1">Tabela de Dados Completa:</p>
+                        <table class="w-full text-sm text-left text-slate-500">
+                            <thead class="text-xs text-slate-700 uppercase bg-slate-200"><tr><th class="px-2 py-1">Usuário</th><th class="px-2 py-1">Região</th><th class="px-2 py-1">Produto</th><th class="px-2 py-1">Vendas</th><th class="px-2 py-1">Salário (Confidencial)</th></tr></thead>
+                            <tbody>
+                                <tr class="bg-white border-b"><td class="px-2 py-1">Alice</td><td class="px-2 py-1">Norte</td><td class="px-2 py-1">X</td><td class="px-2 py-1">100</td><td class="px-2 py-1">5000</td></tr>
+                                <tr class="bg-white border-b"><td class="px-2 py-1">Bob</td><td class="px-2 py-1">Sul</td><td class="px-2 py-1">Y</td><td class="px-2 py-1">150</td><td class="px-2 py-1">6000</td></tr>
+                                <tr class="bg-white border-b"><td class="px-2 py-1">Alice</td><td class="px-2 py-1">Norte</td><td class="px-2 py-1">Z</td><td class="px-2 py-1">200</td><td class="px-2 py-1">5000</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="userA" class="tab-content mt-3 p-3 border rounded-md bg-slate-50">
+                        <p class="font-semibold mb-1">Visão Usuário A (Regra: Região = Norte, sem acesso a Salário):</p>
+                         <table class="w-full text-sm text-left text-slate-500">
+                            <thead class="text-xs text-slate-700 uppercase bg-slate-200"><tr><th class="px-2 py-1">Usuário</th><th class="px-2 py-1">Região</th><th class="px-2 py-1">Produto</th><th class="px-2 py-1">Vendas</th></tr></thead>
+                            <tbody>
+                                <tr class="bg-white border-b"><td class="px-2 py-1">Alice</td><td class="px-2 py-1">Norte</td><td class="px-2 py-1">X</td><td class="px-2 py-1">100</td></tr>
+                                 <tr class="bg-white border-b"><td class="px-2 py-1">Alice</td><td class="px-2 py-1">Norte</td><td class="px-2 py-1">Z</td><td class="px-2 py-1">200</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="userB" class="tab-content mt-3 p-3 border rounded-md bg-slate-50">
+                        <p class="font-semibold mb-1">Visão Usuário B (Regra: Região = Sul, acesso a Salário apenas para sua região):</p>
+                        <table class="w-full text-sm text-left text-slate-500">
+                            <thead class="text-xs text-slate-700 uppercase bg-slate-200"><tr><th class="px-2 py-1">Usuário</th><th class="px-2 py-1">Região</th><th class="px-2 py-1">Produto</th><th class="px-2 py-1">Vendas</th><th class="px-2 py-1">Salário (Confidencial)</th></tr></thead>
+                            <tbody>
+                                 <tr class="bg-white border-b"><td class="px-2 py-1">Bob</td><td class="px-2 py-1">Sul</td><td class="px-2 py-1">Y</td><td class="px-2 py-1">150</td><td class="px-2 py-1">6000</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="ecossistema" class="content-section space-y-6 bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-3xl font-semibold text-sky-600 border-b-2 border-sky-200 pb-3 mb-4">QuickSight e o Ecossistema AWS</h3>
+                <p class="text-lg">A força do QuickSight é amplificada por sua integração nativa com o vasto ecossistema de serviços da AWS. Isso permite construir pipelines de dados ponta-a-ponta de forma ágil e otimizada.</p>
+                <div>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">Integração Nativa e Sem Emendas:</h4>
+                    <p class="text-slate-600">Projetado para se integrar perfeitamente, aproveitando a infraestrutura AWS existente.</p>
+                    <div class="mt-4 p-4 border border-dashed border-teal-300 rounded-md bg-teal-50">
+                        <h5 class="text-lg font-semibold text-teal-700 mb-3 text-center">Diagrama Conceitual: Ecossistema AWS e QuickSight</h5>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                            <div class="col-span-1 md:col-span-3 flex justify-center mb-3">
+                                <div class="diagram-box bg-amber-200 border-amber-500 font-bold w-1/2 md:w-1/3">Amazon QuickSight</div>
+                            </div>
+                            <div class="diagram-box relative group">AWS S3<span class="diagram-arrow absolute -top-6 left-1/2 transform -translate-x-1/2">⬆️</span>
+                                <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max p-2 text-xs bg-slate-700 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Data Lake Storage</span>
+                            </div>
+                            <div class="diagram-box relative group">AWS Athena / Glue<span class="diagram-arrow absolute -top-6 left-1/2 transform -translate-x-1/2">⬆️</span>
+                                <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max p-2 text-xs bg-slate-700 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Query Engine & Catalog</span>
+                            </div>
+                            <div class="diagram-box relative group">AWS Redshift<span class="diagram-arrow absolute -top-6 left-1/2 transform -translate-x-1/2">⬆️</span>
+                                <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max p-2 text-xs bg-slate-700 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Data Warehouse</span>
+                            </div>
+                             <div class="diagram-box relative group">AWS RDS / Aurora<span class="diagram-arrow absolute -top-6 left-1/2 transform -translate-x-1/2">⬆️</span>
+                                <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max p-2 text-xs bg-slate-700 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Relational Databases</span>
+                            </div>
+                             <div class="diagram-box relative group">AWS SageMaker<span class="diagram-arrow absolute -top-6 left-1/2 transform -translate-x-1/2">⬆️</span>
+                                <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max p-2 text-xs bg-slate-700 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Machine Learning</span>
+                            </div>
+                             <div class="diagram-box relative group">AWS Lambda<span class="diagram-arrow absolute -top-6 left-1/2 transform -translate-x-1/2">⬆️</span>
+                                <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max p-2 text-xs bg-slate-700 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity">Serverless Automation</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-center mt-4 text-slate-500">Setas indicam fluxo de dados/integração para QuickSight. Passe o mouse para dicas.</p>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold text-slate-700 mb-2">Benefícios para o time de dados:</h4>
+                    <ul class="list-disc list-inside space-y-1 pl-4 text-slate-600">
+                        <li><strong>Agilidade:</strong> Construção rápida de pipelines de dados ponta-a-ponta.</li>
+                        <li><strong>Otimização:</strong> Aproveitamento da infraestrutura AWS e otimização de custos.</li>
+                        <li><strong>Simplificação:</strong> Arquitetura de BI mais coesa e fácil de gerenciar.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="casos_uso" class="content-section space-y-6 bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-3xl font-semibold text-sky-600 border-b-2 border-sky-200 pb-3 mb-4">Casos de Uso e Benefícios</h3>
+                <p class="text-lg">O QuickSight pode ser aplicado em diversos cenários, trazendo benefícios tangíveis para o time de dados e para a organização como um todo. Veja alguns exemplos de como ele pode agregar valor.</p>
+                 <ul class="list-disc list-inside space-y-2 pl-4 text-slate-600">
+                    <li><strong>Capacitação do "Self-Service BI":</strong> Reduz a dependência do time de dados para relatórios ad-hoc, permitindo que usuários de negócio respondam às suas próprias perguntas.</li>
+                    <li><strong>Agilidade na Entrega de Insights:</strong> Publicação rápida de dashboards, com ciclos de feedback mais curtos.</li>
+                    <li><strong>Monitoramento de Qualidade de Dados e Pipelines:</strong> Crie dashboards para monitorar a saúde dos pipelines, volumes, latência e erros.</li>
+                    <li><strong>Validação e Visualização de Modelos de ML:</strong> Conecte-se a resultados de modelos (ex: SageMaker) para visualizar previsões e performance.</li>
+                    <li><strong>Redução de Custos Operacionais:</strong> Modelo serverless elimina gerenciamento de servidores. Escalabilidade otimiza recursos.</li>
+                    <li><strong>Foco em Tarefas Estratégicas:</strong> Libera o time de dados para se concentrar em problemas mais complexos de engenharia, modelagem e ciência de dados.</li>
+                </ul>
+            </section>
+
+            <section id="proximos_passos" class="content-section space-y-6 bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-3xl font-semibold text-sky-600 border-b-2 border-sky-200 pb-3 mb-4">Próximos Passos</h3>
+                 <p class="text-lg">Interessado em explorar mais o Amazon QuickSight? Aqui estão algumas sugestões para você e seu time de dados começarem ou aprofundarem seus conhecimentos e implementações.</p>
+                <ul class="list-disc list-inside space-y-2 pl-4 text-slate-600">
+                    <li><strong>Explorar a Documentação Oficial:</strong> Aprofundar-se nos detalhes técnicos e melhores práticas.</li>
+                    <li><strong>Realizar Laboratórios Práticos (Workshops AWS):</strong> Experiência hands-on para entender o fluxo de trabalho.</li>
+                    <li><strong>Identificar um Caso de Uso Piloto:</strong> Começar com um projeto pequeno para validar a ferramenta.</li>
+                    <li><strong>Planejar Treinamento:</strong> Capacitar usuários de negócio para o self-service BI.</li>
+                    <li><strong>Definir Governança:</strong> Estabelecer políticas de segurança e acesso desde o início.</li>
+                </ul>
+                <p class="text-slate-600 mt-4">O Amazon QuickSight oferece um grande potencial para transformar a maneira como sua organização interage com dados. Boa exploração!</p>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const contentSections = document.querySelectorAll('.content-section');
+            const mainTitle = document.getElementById('main-title');
+
+            function updateContent(hash) {
+                contentSections.forEach(section => section.classList.remove('active'));
+                navLinks.forEach(link => link.classList.remove('active'));
+
+                const targetSection = document.querySelector(hash || '#introducao');
+                const activeLink = document.querySelector(`.nav-link[href="${hash || '#introducao'}"]`);
+                
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                    mainTitle.textContent = activeLink ? activeLink.textContent : 'Bem-vindo!';
+                }
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+            }
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    history.pushState(null, '', targetId);
+                    updateContent(targetId);
+                    window.scrollTo(0,0);
+                });
+            });
+
+            window.addEventListener('popstate', function () {
+                updateContent(window.location.hash);
+            });
+
+            updateContent(window.location.hash || '#introducao');
+
+            // SPICE Chart
+            const spiceCtx = document.getElementById('spiceChart');
+            if (spiceCtx) {
+                new Chart(spiceCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Direct Query', 'SPICE'],
+                        datasets: [{
+                            label: 'Latência Conceitual (Menor é Melhor)',
+                            data: [100, 20],
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.6)', // blue
+                                'rgba(255, 159, 64, 0.6)'  // orange
+                            ],
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Latência Relativa' }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) { label += ': '; }
+                                        if (context.parsed.y !== null) {
+                                            label += context.parsed.y;
+                                            if (context.label === 'SPICE') {
+                                                label += ' (Rápido, em memória)';
+                                            } else {
+                                                label += ' (Em tempo real, depende da fonte)';
+                                            }
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Interactive Icons for ML Insights
+            const MLLinks = document.querySelectorAll('.interactive-icon-container span');
+            MLLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    const detail = link.nextElementSibling;
+                    detail.style.display = detail.style.display === 'block' ? 'none' : 'block';
+                });
+            });
+
+            // Tabs for RLS/CLS example
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetTab = button.dataset.tab;
+
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    tabContents.forEach(content => {
+                        if (content.id === targetTab) {
+                            content.classList.add('active');
+                        } else {
+                            content.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
