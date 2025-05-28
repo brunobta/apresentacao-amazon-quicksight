@@ -106,6 +106,9 @@
                 <a href="#ecossistema" class="nav-link block py-2.5 px-4 rounded-md font-semibold">Ecossistema AWS</a>
                 <a href="#casos_uso" class="nav-link block py-2.5 px-4 rounded-md font-semibold">Casos de Uso</a>
                 <a href="#proximos_passos" class="nav-link block py-2.5 px-4 rounded-md font-semibold">Próximos Passos</a>
+                <hr class="my-3 border-slate-600">
+                <a href="#infografico" class="nav-link block py-2.5 px-4 rounded-md font-semibold">Infográfico</a>
+                <a href="#podcast" class="nav-link block py-2.5 px-4 rounded-md font-semibold">Podcast</a>
             </nav>
         </aside>
 
@@ -396,6 +399,79 @@
                 <p class="text-slate-600 mt-4">O Amazon QuickSight oferece um grande potencial para transformar a maneira como sua organização interage com dados. Boa exploração!</p>
             </section>
 
+            <section id="infografico" class="content-section space-y-6 bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-3xl font-semibold text-sky-600 border-b-2 border-sky-200 pb-3 mb-6 text-center">
+                    Amazon QuickSight: Insights em um Piscar de Olhos
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <div class="bg-sky-50 p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+                        <div class="flex items-center mb-3">
+                            <span class="text-4xl mr-4 text-sky-500">🚀</span>
+                            <h4 class="text-xl font-semibold text-sky-700">O Que é QuickSight?</h4>
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed">Serviço de BI <strong>serverless</strong> e escalável da AWS. Crie e compartilhe dashboards interativos sem gerenciar infraestrutura.</p>
+                    </div>
+
+                    <div class="bg-teal-50 p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+                        <div class="flex items-center mb-3">
+                            <span class="text-4xl mr-4 text-teal-500">🔗</span>
+                            <h4 class="text-xl font-semibold text-teal-700">Conectividade Total</h4>
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed">Conecte-se a diversas fontes (AWS, on-prem, SaaS). Use <strong>SPICE</strong> para performance ultrarrápida ou <strong>Direct Query</strong> para dados em tempo real.</p>
+                    </div>
+
+                    <div class="bg-amber-50 p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+                        <div class="flex items-center mb-3">
+                            <span class="text-4xl mr-4 text-amber-500">🛠️</span>
+                            <h4 class="text-xl font-semibold text-amber-700">Preparação Visual</h4>
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed">Limpe, transforme e modele dados com interface visual. Crie <strong>Datasets</strong> reutilizáveis e campos calculados facilmente.</p>
+                    </div>
+
+                    <div class="bg-indigo-50 p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+                        <div class="flex items-center mb-3">
+                            <span class="text-4xl mr-4 text-indigo-500">📊</span>
+                            <h4 class="text-xl font-semibold text-indigo-700">Dashboards Vivos</h4>
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed">Crie análises e dashboards interativos com drag-and-drop. Filtros, parâmetros e drill-downs para exploração profunda dos dados.</p>
+                    </div>
+
+                    <div class="bg-pink-50 p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+                        <div class="flex items-center mb-3">
+                            <span class="text-4xl mr-4 text-pink-500">💡</span>
+                            <h4 class="text-xl font-semibold text-pink-700">ML Insights</h4>
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed">Descubra anomalias, faça previsões e obtenha narrativas automatizadas com Machine Learning, sem código complexo.</p>
+                    </div>
+
+                    <div class="bg-lime-50 p-6 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+                        <div class="flex items-center mb-3">
+                            <span class="text-4xl mr-4 text-lime-500">🛡️</span>
+                            <h4 class="text-xl font-semibold text-lime-700">Segurança & Ecossistema</h4>
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed">Controle de acesso granular (RLS, CLS), integração IAM. Perfeitamente integrado ao ecossistema AWS (S3, Redshift, Athena).</p>
+                    </div>
+                </div>
+
+                <div class="mt-10 text-center">
+                    <a href="#proximos_passos" class="bg-sky-600 hover:bg-sky-700 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-lg inline-block transform hover:scale-105">
+                        Explore o QuickSight Agora!
+                    </a>
+                </div>
+            </section>
+
+            <section id="podcast" class="content-section space-y-6 bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-3xl font-semibold text-sky-600 border-b-2 border-sky-200 pb-3 mb-4">Podcast: Desvendando o Amazon QuickSight</h3>
+                <div>
+                    <p class="text-lg text-slate-700 mb-4">Ouça o episódio completo do nosso podcast sobre o Amazon QuickSight.</p>
+                    <audio controls class="w-full">
+                        <source src="podcast.mp3" type="audio/mpeg">
+                        Seu navegador não suporta o elemento de áudio.
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -412,7 +488,7 @@
                 const targetSection = document.querySelector(hash || '#introducao');
                 const activeLink = document.querySelector(`.nav-link[href="${hash || '#introducao'}"]`);
                 
-                if (targetSection) {
+                if (targetSection && activeLink) { // Check activeLink as well
                     targetSection.classList.add('active');
                     mainTitle.textContent = activeLink ? activeLink.textContent : 'Bem-vindo!';
                 }
@@ -435,7 +511,12 @@
                 updateContent(window.location.hash);
             });
 
-            updateContent(window.location.hash || '#introducao');
+            // Initial load
+            let initialHash = window.location.hash;
+            if (!initialHash || !document.querySelector(initialHash)) {
+                initialHash = '#introducao'; // Default to introducao if hash is invalid or missing
+            }
+            updateContent(initialHash);
 
             // SPICE Chart
             const spiceCtx = document.getElementById('spiceChart');
